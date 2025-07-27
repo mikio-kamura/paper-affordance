@@ -634,7 +634,18 @@ let sketch = function (p) {
     };
   }
 
-
+  p.interaction = function () {
+    if (flag == 1) {
+      p.drawFingersCircles();
+      p.detectFingerTouched();
+    } else if (flag == 2) {
+      p.jabara();
+      p.checkKeepingClosed();
+    } else if (flag == 3) {
+      p.drawSimple();
+      p.checkKeepingDrawSimple();
+    }
+  };
 };
 
 let myp5 = new p5(sketch);
