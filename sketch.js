@@ -8,7 +8,7 @@ let sketch = function (p) {
   let thumbRootX = [];
   let thumbRootY = [];
 
-  let flag = 1;
+  let flag = 3;
   let handImage = [];
   let circleMin = 10;
 
@@ -34,69 +34,15 @@ let sketch = function (p) {
     currentDirection: 'none', // 'right', 'down', 'left', 'up'
     directionSequence: [], // 方向の履歴を保存
     rotationDirection: 'none', // 'clockwise', 'counterclockwise'
-    lastProcessedDirection: 'none' // 最後に処理した方向
+    lastProcessedDirection: 'none', // 最後に処理した方向
+    totalMovement: 0, // 累積移動量
+    lastIncrementTime: 0 // 最後にインクリメントした時間
   };
 
   p.setup = function () {
     // cannot use p.preload so load here using callback...
     // load hand images
-    {
-      p.loadImage("hands/1.jpg", function (loadedImage) {
-        handImage[0] = loadedImage;
-      });
-      p.loadImage("hands/2.jpg", function (loadedImage) {
-        handImage[1] = loadedImage;
-      });
-      p.loadImage("hands/3.jpg", function (loadedImage) {
-        handImage[2] = loadedImage;
-      });
-      p.loadImage("hands/4.jpg", function (loadedImage) {
-        handImage[3] = loadedImage;
-      });
-      p.loadImage("hands/5.jpg", function (loadedImage) {
-        handImage[4] = loadedImage;
-      });
-      p.loadImage("hands/6.jpg", function (loadedImage) {
-        handImage[5] = loadedImage;
-      });
-      p.loadImage("hands/7.jpg", function (loadedImage) {
-        handImage[6] = loadedImage;
-      });
-      p.loadImage("hands/8.jpg", function (loadedImage) {
-        handImage[7] = loadedImage;
-      });
-      p.loadImage("hands/9.jpg", function (loadedImage) {
-        handImage[8] = loadedImage;
-      });
-      p.loadImage("hands/10.jpg", function (loadedImage) {
-        handImage[9] = loadedImage;
-      });
-      p.loadImage("hands/11.jpg", function (loadedImage) {
-        handImage[10] = loadedImage;
-      });
-      p.loadImage("hands/12.jpg", function (loadedImage) {
-        handImage[11] = loadedImage;
-      });
-      p.loadImage("hands/13.jpg", function (loadedImage) {
-        handImage[12] = loadedImage;
-      });
-      p.loadImage("hands/14.jpg", function (loadedImage) {
-        handImage[13] = loadedImage;
-      });
-      p.loadImage("hands/15.jpg", function (loadedImage) {
-        handImage[14] = loadedImage;
-      });
-      p.loadImage("hands/16.jpg", function (loadedImage) {
-        handImage[15] = loadedImage;
-      });
-      p.loadImage("hands/17.jpg", function (loadedImage) {
-        handImage[16] = loadedImage;
-      });
-      p.loadImage("hands/18.jpg", function (loadedImage) {
-        handImage[17] = loadedImage;
-        handImage[18] = loadedImage;
-      });
-    }
+    // flag 2
     {
       p.loadImage("videos/jabara/01.png", function (loadedImage) {
         jabaraImage[0] = loadedImage;
@@ -159,6 +105,7 @@ let sketch = function (p) {
         jabaraImage[19] = loadedImage;
       });
     }
+    // flag 3
     {
       p.loadImage("videos/draw-simple/01.png", function (loadedImage) {
         drawSimpleImage[0] = loadedImage;
@@ -257,6 +204,12 @@ let sketch = function (p) {
         drawSimpleImage[31] = loadedImage;
       });
     }
+    // flag 4
+    {
+      p.loadImage("videos/draw-simple/01.png", function (loadedImage) {
+        drawSimpleImage[0] = loadedImage;
+      });
+    }
 
     canvas = p.createCanvas(p.windowWidth, p.windowHeight);
     console.log(p.windowWidth, p.windowHeight);
@@ -302,6 +255,7 @@ let sketch = function (p) {
     let debugText = [
       `方向: ${handTrajectory.currentDirection}`,
       `回転方向: ${handTrajectory.rotationDirection}`,
+      `移動量: ${Math.round(handTrajectory.totalMovement)}`,
       `方向履歴: [${handTrajectory.directionSequence.join(', ')}]`,
       `画像インデックス: ${drawSimpleState.imageIndex}`,
       `完了周数: ${drawSimpleState.completedCircles}/${drawSimpleState.totalCircles}`
@@ -349,11 +303,17 @@ let sketch = function (p) {
         return;
       }
 
+      // 移動量を計算
+      let dx = currentX - handTrajectory.prevX;
+      let dy = currentY - handTrajectory.prevY;
+      let movement = Math.sqrt(dx * dx + dy * dy);
+
       // 方向の変化を検出
       let newDirection = p.detectDirection(currentX, currentY, handTrajectory.prevX, handTrajectory.prevY);
 
       if (newDirection !== handTrajectory.currentDirection && newDirection !== 'none') {
         handTrajectory.currentDirection = newDirection;
+        handTrajectory.totalMovement = 0; // 方向が変わったらリセット
 
         // 方向履歴に追加
         if (handTrajectory.directionSequence.length < 4) {
@@ -367,6 +327,11 @@ let sketch = function (p) {
         handTrajectory.rotationDirection = p.detectRotationDirection(handTrajectory.directionSequence);
       }
 
+      // 累積移動量を更新
+      if (newDirection !== 'none') {
+        handTrajectory.totalMovement += movement;
+      }
+
       handTrajectory.prevX = currentX;
       handTrajectory.prevY = currentY;
     }
@@ -378,7 +343,7 @@ let sketch = function (p) {
     let dy = currentY - prevY;
 
     // 最小移動量の閾値
-    let threshold = 13;
+    let threshold = 25;
 
     if (Math.abs(dx) < threshold && Math.abs(dy) < threshold) {
       return 'none';
@@ -551,18 +516,15 @@ let sketch = function (p) {
   // drawSimple用の変数（グローバルスコープに移動）
   let drawSimpleState = {
     imageIndex: 0,
-    completedCircles: 0,
-    totalCircles: 6
   };
 
   // flag 3
   {
-
     p.drawSimple = function () {
-      // 方向が変わった時にインクリメント/デクリメント処理
+      // 移動量に基づいてインクリメント/デクリメント処理
       if (handTrajectory.currentDirection !== 'none' &&
         handTrajectory.rotationDirection !== 'none' &&
-        handTrajectory.currentDirection !== handTrajectory.lastProcessedDirection) {
+        handTrajectory.totalMovement > 30) { // 移動量が30を超えたら
 
         // 回転方向に応じてインクリメント/デクリメント
         if (handTrajectory.rotationDirection === 'clockwise') {
@@ -573,26 +535,8 @@ let sketch = function (p) {
           console.log('左回り: デクリメント, 画像インデックス:', drawSimpleState.imageIndex);
         }
 
-        // 画像インデックスの範囲チェック
-        if (drawSimpleState.imageIndex >= drawSimpleImage.length) {
-          drawSimpleState.completedCircles++;
-          drawSimpleState.imageIndex = 0;
-          console.log(`一周完了: ${drawSimpleState.completedCircles}/${drawSimpleState.totalCircles}`);
-        } else if (drawSimpleState.imageIndex < 0) {
-          drawSimpleState.completedCircles++;
-          drawSimpleState.imageIndex = drawSimpleImage.length - 1;
-          console.log(`一周完了: ${drawSimpleState.completedCircles}/${drawSimpleState.totalCircles}`);
-        }
-
-        // 6周完了したらリセット
-        if (drawSimpleState.completedCircles >= drawSimpleState.totalCircles) {
-          drawSimpleState.completedCircles = 0;
-          drawSimpleState.imageIndex = 0;
-          console.log('6周完了、リセット');
-        }
-
-        // 処理した方向を記録
-        handTrajectory.lastProcessedDirection = handTrajectory.currentDirection;
+        // 移動量をリセット
+        handTrajectory.totalMovement = 0;
       }
 
       // 画像インデックスが範囲内かチェック
@@ -617,10 +561,11 @@ let sketch = function (p) {
     };
 
     p.checkKeepingDrawSimple = function () {
-      if (drawSimpleLevel >= 19) {
+      if (drawSimpleState.imageIndex >= drawSimpleImage.length) {
         if (timeoutId === null) {
           timeoutId = setTimeout(() => {
             flag = 1;
+            drawSimpleState.imageIndex = 0;
             timeoutId = null; // reset timer
           }, waitMilSec);
         }
