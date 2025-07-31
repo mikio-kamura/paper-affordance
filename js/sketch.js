@@ -3,6 +3,7 @@
 let canvas;
 
 let sketch = function (p) {
+  let handInfo = {};
   let finPosX = [];
   let finPosY = [];
   let thumbRootX = [];
@@ -1018,7 +1019,7 @@ let sketch = function (p) {
       p.checkKeepingDrawSimple();
     } else if (scene == 4) {
       p.Box();
-      scene = p.checkKeepingBox();
+      p.checkKeepingBox();
     } else if (scene == 9) {
       p.wristTwist();
       p.checkKeepingWristTwist();
