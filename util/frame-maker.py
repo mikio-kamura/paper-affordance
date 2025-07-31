@@ -2,9 +2,13 @@ import cv2
 import os
 import sys
 
-def video_to_frames(video_path, output_dir):
+# --- 設定項目 ---
+# ここで何コマごとに画像を保存するか設定します（例: 2なら2コマごと）
+FRAME_INTERVAL = 3
+
+def video_to_frames(video_path, output_dir, interval):
     """
-    動画を読み込み、フレームごとに画像として保存する関数。
+    動画を読み込み、指定された間隔でフレームを画像として保存する関数。
     """
     # 出力ディレクトリが存在しない場合は作成
     os.makedirs(output_dir, exist_ok=True)
@@ -19,17 +23,23 @@ def video_to_frames(video_path, output_dir):
 
     # フレームを1枚ずつ読み込み、画像として保存
     frame_count = 0
+    saved_count = 0
     while True:
         ret, frame = cap.read()
         if not ret:
             break
 
-        output_path = os.path.join(output_dir, f"{frame_count:02d}.png")
-        cv2.imwrite(output_path, frame)
+        # 指定された間隔のフレームのみ保存
+        if frame_count % interval == 0:
+            # ゼロ埋めしたファイル名で出力パスを生成 (例: 0000.png, 0002.png)
+            output_path = os.path.join(output_dir, f"{saved_count:02d}.png")
+            cv2.imwrite(output_path, frame)
+            saved_count += 1
+
         frame_count += 1
 
     cap.release()
-    print(f"✅ 処理が完了しました。{frame_count} 個のフレームを '{output_dir}' に保存しました。")
+    print(f"✅ 処理が完了しました。{saved_count} 個のフレームを '{output_dir}' に保存しました。")
 
 
 if __name__ == '__main__':
@@ -46,4 +56,4 @@ if __name__ == '__main__':
     output_folder = sys.argv[2] if len(sys.argv) > 2 else 'output_frames'
 
     # 関数を実行
-    video_to_frames(input_video_path, output_folder)
+    video_to_frames(input_video_path, output_folder, FRAME_INTERVAL)
