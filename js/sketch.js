@@ -9,7 +9,7 @@ let sketch = function (p) {
   let thumbRootX = [];
   let thumbRootY = [];
 
-  let scene = 5;
+  let scene = 9;
   let circleMin = 10;
   let scene_ = 0;
 
@@ -29,6 +29,8 @@ let sketch = function (p) {
     imageIndex: 0,
   };
 
+  let kurukuruImage = [];
+
   let timeoutId;
 
   // scene5用の状態管理オブジェクトを追加
@@ -37,21 +39,22 @@ let sketch = function (p) {
     isFingersClose: false,
     lastY: 0,
     lastActionTime: 0,
-    cooldown: 200 // 連続操作防止のための待機時間(ms)
+    cooldown: 130 // 連続操作防止のための待機時間(ms)
   };
 
   let threeWindowFlipState = {
     imageIndex: 0,
     prevDist: -1, // 1フレーム前の指の距離を保存（-1で初期化）
     lastActionTime: 0,
-    cooldown: 150 // チャタリング防止用の待機時間(ms)
+    cooldown: 100 // チャタリング防止用の待機時間(ms)
   };
 
   let holdThreeWindowState = {
     imageIndex: 0,
     prevDist: -1, // 1フレーム前の指の距離を保存（-1で初期化）
     lastActionTime: 0,
-    cooldown: 150 // チャタリング防止用の待機時間(ms)
+    cooldown: 100, // チャタリング防止用の待機時間(ms)
+    wristRotationThreshold: 20 // 手首回転検出の閾値
   };
 
   // 手の軌道追跡用の変数
@@ -73,7 +76,7 @@ let sketch = function (p) {
     wristDirection: 'none', // 'clockwise', 'counterclockwise'
     wristRotationSequence: [], // 手首回転の履歴
     totalWristMovement: 0, // 手首の累積移動量
-    wristRotationThreshold: 40 // 手首回転検出の閾値
+    wristRotationThreshold: 10 // 手首回転検出の閾値
   };
 
   // scene 9用の状態管理
@@ -620,6 +623,193 @@ let sketch = function (p) {
       });
     }
 
+    // scene 9
+    {
+      p.loadImage("videos/cropped/kurukuru/01.png", function (loadedImage) {
+        kurukuruImage[0] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/02.png", function (loadedImage) {
+        kurukuruImage[1] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/03.png", function (loadedImage) {
+        kurukuruImage[2] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/04.png", function (loadedImage) {
+        kurukuruImage[3] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/05.png", function (loadedImage) {
+        kurukuruImage[4] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/06.png", function (loadedImage) {
+        kurukuruImage[5] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/07.png", function (loadedImage) {
+        kurukuruImage[6] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/08.png", function (loadedImage) {
+        kurukuruImage[7] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/09.png", function (loadedImage) {
+        kurukuruImage[8] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/10.png", function (loadedImage) {
+        kurukuruImage[9] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/11.png", function (loadedImage) {
+        kurukuruImage[10] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/12.png", function (loadedImage) {
+        kurukuruImage[11] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/13.png", function (loadedImage) {
+        kurukuruImage[12] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/14.png", function (loadedImage) {
+        kurukuruImage[13] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/15.png", function (loadedImage) {
+        kurukuruImage[14] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/16.png", function (loadedImage) {
+        kurukuruImage[15] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/17.png", function (loadedImage) {
+        kurukuruImage[16] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/18.png", function (loadedImage) {
+        kurukuruImage[17] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/19.png", function (loadedImage) {
+        kurukuruImage[18] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/20.png", function (loadedImage) {
+        kurukuruImage[19] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/21.png", function (loadedImage) {
+        kurukuruImage[20] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/22.png", function (loadedImage) {
+        kurukuruImage[21] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/23.png", function (loadedImage) {
+        kurukuruImage[22] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/24.png", function (loadedImage) {
+        kurukuruImage[23] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/25.png", function (loadedImage) {
+        kurukuruImage[24] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/26.png", function (loadedImage) {
+        kurukuruImage[25] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/27.png", function (loadedImage) {
+        kurukuruImage[26] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/28.png", function (loadedImage) {
+        kurukuruImage[27] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/29.png", function (loadedImage) {
+        kurukuruImage[28] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/30.png", function (loadedImage) {
+        kurukuruImage[29] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/31.png", function (loadedImage) {
+        kurukuruImage[30] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/32.png", function (loadedImage) {
+        kurukuruImage[31] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/33.png", function (loadedImage) {
+        kurukuruImage[32] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/34.png", function (loadedImage) {
+        kurukuruImage[33] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/35.png", function (loadedImage) {
+        kurukuruImage[34] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/36.png", function (loadedImage) {
+        kurukuruImage[35] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/37.png", function (loadedImage) {
+        kurukuruImage[36] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/38.png", function (loadedImage) {
+        kurukuruImage[37] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/39.png", function (loadedImage) {
+        kurukuruImage[38] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/40.png", function (loadedImage) {
+        kurukuruImage[39] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/41.png", function (loadedImage) {
+        kurukuruImage[40] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/42.png", function (loadedImage) {
+        kurukuruImage[41] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/43.png", function (loadedImage) {
+        kurukuruImage[42] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/44.png", function (loadedImage) {
+        kurukuruImage[43] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/45.png", function (loadedImage) {
+        kurukuruImage[44] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/46.png", function (loadedImage) {
+        kurukuruImage[45] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/47.png", function (loadedImage) {
+        kurukuruImage[46] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/48.png", function (loadedImage) {
+        kurukuruImage[47] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/49.png", function (loadedImage) {
+        kurukuruImage[48] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/50.png", function (loadedImage) {
+        kurukuruImage[49] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/51.png", function (loadedImage) {
+        kurukuruImage[50] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/52.png", function (loadedImage) {
+        kurukuruImage[51] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/53.png", function (loadedImage) {
+        kurukuruImage[52] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/54.png", function (loadedImage) {
+        kurukuruImage[53] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/55.png", function (loadedImage) {
+        kurukuruImage[54] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/56.png", function (loadedImage) {
+        kurukuruImage[55] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/57.png", function (loadedImage) {
+        kurukuruImage[56] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/58.png", function (loadedImage) {
+        kurukuruImage[57] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/59.png", function (loadedImage) {
+        kurukuruImage[58] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/60.png", function (loadedImage) {
+        kurukuruImage[59] = loadedImage;
+      });
+      p.loadImage("videos/cropped/kurukuru/61.png", function (loadedImage) {
+        kurukuruImage[60] = loadedImage;
+      });
+    }
+
     canvas = p.createCanvas(p.windowWidth, p.windowHeight);
     console.log(p.windowWidth, p.windowHeight);
     canvas.id("canvas");
@@ -1052,7 +1242,6 @@ let sketch = function (p) {
         );
       } else {
         p.image(jabaraImage[0], p.width / 2, p.height / 2, p.width, p.height);
-        console.log("not found f2's", closeLevel);
       }
     };
 
@@ -1091,10 +1280,8 @@ let sketch = function (p) {
         // 回転方向に応じてインクリメント/デクリメント
         if (handTrajectory.rotationDirection === 'clockwise') {
           drawSimpleState.imageIndex++;
-          console.log('右回り: インクリメント, 画像インデックス:', drawSimpleState.imageIndex);
         } else if (handTrajectory.rotationDirection === 'counterclockwise') {
           drawSimpleState.imageIndex--;
-          console.log('左回り: デクリメント, 画像インデックス:', drawSimpleState.imageIndex);
         }
 
         // 移動量をリセット
@@ -1115,10 +1302,8 @@ let sketch = function (p) {
           p.width,
           p.height,
         );
-        console.log('使用画像インデックス:', imageIndex, '完了周数:', drawSimpleState.completedCircles);
       } else {
         p.image(drawSimpleImage[0], p.width / 2, p.height / 2, p.width, p.height);
-        console.log("画像が見つかりません:", imageIndex);
       }
     };
 
@@ -1156,16 +1341,13 @@ let sketch = function (p) {
             finPosX[1][1],
             finPosY[1][1],
           )
-          console.log('distance', distance)
           let maxDistance = p.width * 0.8; // 最大距離を画面幅の80%に制限
 
           // まずscene_の切り替えを判定
           if (scene_ == 0 && prevBoxState.imageIndex == 23 && distance < 30) {
             scene_ = 1;
-            console.log('scene_ switched to 1');
           } else if (scene_ == 1 && prevBoxState.imageIndex == 24 && distance < 30) {
             scene_ = 0;
-            console.log('scene_ switched to 0');
           }
 
           // scene_に応じて画像インデックスを計算
@@ -1292,7 +1474,6 @@ let sketch = function (p) {
           // コマを進める
           if (threeWindowState.imageIndex < threeWindowImage.length - 1) {
             threeWindowState.imageIndex++;
-            console.log("Scene5: コマを進めました。Index:", threeWindowState.imageIndex);
           }
 
           // タイムスタンプとY座標を更新
@@ -1388,7 +1569,6 @@ let sketch = function (p) {
         // コマを進める
         if (threeWindowFlipState.imageIndex < threeWindowFlipImage.length - 1) {
           threeWindowFlipState.imageIndex++;
-          console.log("Scene6: コマを進めました。Index:", threeWindowFlipState.imageIndex);
         }
 
         // アクション実行時間を更新
@@ -1453,10 +1633,9 @@ let sketch = function (p) {
       if (holdThreeWindowState.isFingersClose) {
         // このロジックはscene9(wristTwist)とほぼ同じ
         if (wristRotation.wristDirection !== 'none' &&
-          wristRotation.totalWristMovement > wristRotation.wristRotationThreshold) {
+          wristRotation.totalWristMovement > holdThreeWindowState.wristRotationThreshold) {
 
           holdThreeWindowState.imageIndex++;
-          console.log('Scene7: コマを進めました。Index:', holdThreeWindowState.imageIndex);
           // 累積した移動量をリセット
           wristRotation.totalWristMovement = 0;
         }
@@ -1484,7 +1663,7 @@ let sketch = function (p) {
       if (holdThreeWindowState.imageIndex >= holdThreeWindowImage.length - 1) {
         if (timeoutId === null) {
           timeoutId = setTimeout(() => {
-            scene = 1; // 最初のシーンに戻る
+            scene = 9; // 最初のシーンに戻る
             holdThreeWindowState.imageIndex = 0; // 状態をリセット
             holdThreeWindowState.prevDist = -1;
             timeoutId = null;
@@ -1503,56 +1682,43 @@ let sketch = function (p) {
   {
     p.wristTwist = function () {
       // 握り状態を検出
-      p.detectGrasping();
+      // p.detectGrasping();
 
-      // 握り状態でない場合は何もしない
-      if (!wristTwistState.isGrasping) {
-        return;
-      }
+      // // 握り状態でない場合は何もしない
+      // if (!wristTwistState.isGrasping) {
+      //   return;
+      // }
 
       // 手首の回転動作を検出して画像インデックスを制御
       if (wristRotation.wristDirection !== 'none' &&
         wristRotation.totalWristMovement > wristRotation.wristRotationThreshold) {
-
-        // 回転方向に応じてインクリメント/デクリメント
-        if (wristRotation.wristDirection === 'clockwise') {
-          wristTwistState.imageIndex++;
-          console.log('手首右回り: インクリメント, 画像インデックス:', wristTwistState.imageIndex);
-        } else if (wristRotation.wristDirection === 'counterclockwise') {
-          wristTwistState.imageIndex--;
-          console.log('手首左回り: デクリメント, 画像インデックス:', wristTwistState.imageIndex);
-        }
-
-        // 移動量をリセット
+        wristTwistState.imageIndex++;
         wristRotation.totalWristMovement = 0;
       }
 
       // 画像インデックスが範囲内かチェック
       let imageIndex = wristTwistState.imageIndex;
-      if (imageIndex >= drawSimpleImage.length) {
-        imageIndex = drawSimpleImage.length - 1;
+      if (imageIndex >= kurukuruImage.length) {
+        imageIndex = kurukuruImage.length - 1;
       } else if (imageIndex < 0) {
         imageIndex = 0;
       }
 
-      if (drawSimpleImage[imageIndex]) {
+      if (kurukuruImage[imageIndex]) {
         p.image(
-          drawSimpleImage[imageIndex],
+          kurukuruImage[imageIndex],
           p.width / 2,
           p.height / 2,
           p.width,
           p.height,
         );
-        console.log('手首ひねり使用画像インデックス:', imageIndex);
       } else {
-        p.image(drawSimpleImage[0], p.width / 2, p.height / 2, p.width, p.height);
-        console.log("手首ひねり画像が見つかりません:", imageIndex);
+        p.image(kurukuruImage[0], p.width / 2, p.height / 2, p.width, p.height);
       }
     };
 
     p.checkKeepingWristTwist = function () {
-      // 握り状態が解除された場合の処理
-      if (!wristTwistState.isGrasping) {
+      if (wristTwistState.imageIndex >= kurukuruImage.length - 1) {
         if (timeoutId === null) {
           timeoutId = setTimeout(() => {
             scene = 1;
