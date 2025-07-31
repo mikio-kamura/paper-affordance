@@ -9,7 +9,7 @@ let sketch = function (p) {
   let thumbRootX = [];
   let thumbRootY = [];
 
-  let scene = 2;
+  let scene = 5;
   let circleMin = 10;
   let scene_ = 0;
 
@@ -20,12 +20,39 @@ let sketch = function (p) {
 
   let drawSimpleImage = [];
 
+  let threeWindowImage = [];
+  let threeWindowFlipImage = [];
+  let holdThreeWindowImage = [];
+
   let boxImage = [];
   let prevBoxState = {
     imageIndex: 0,
   };
 
   let timeoutId;
+
+  // scene5用の状態管理オブジェクトを追加
+  let threeWindowState = {
+    imageIndex: 0,
+    isFingersClose: false,
+    lastY: 0,
+    lastActionTime: 0,
+    cooldown: 200 // 連続操作防止のための待機時間(ms)
+  };
+
+  let threeWindowFlipState = {
+    imageIndex: 0,
+    prevDist: -1, // 1フレーム前の指の距離を保存（-1で初期化）
+    lastActionTime: 0,
+    cooldown: 150 // チャタリング防止用の待機時間(ms)
+  };
+
+  let holdThreeWindowState = {
+    imageIndex: 0,
+    prevDist: -1, // 1フレーム前の指の距離を保存（-1で初期化）
+    lastActionTime: 0,
+    cooldown: 150 // チャタリング防止用の待機時間(ms)
+  };
 
   // 手の軌道追跡用の変数
   let handTrajectory = {
@@ -326,6 +353,273 @@ let sketch = function (p) {
       });
     }
 
+    // scene 5
+    {
+      p.loadImage("videos/cropped/three-windows/01.png", function (loadedImage) {
+        threeWindowImage[0] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/02.png", function (loadedImage) {
+        threeWindowImage[1] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/03.png", function (loadedImage) {
+        threeWindowImage[2] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/04.png", function (loadedImage) {
+        threeWindowImage[3] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/05.png", function (loadedImage) {
+        threeWindowImage[4] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/06.png", function (loadedImage) {
+        threeWindowImage[5] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/07.png", function (loadedImage) {
+        threeWindowImage[6] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/08.png", function (loadedImage) {
+        threeWindowImage[7] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/09.png", function (loadedImage) {
+        threeWindowImage[8] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/10.png", function (loadedImage) {
+        threeWindowImage[9] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/11.png", function (loadedImage) {
+        threeWindowImage[10] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/12.png", function (loadedImage) {
+        threeWindowImage[11] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/13.png", function (loadedImage) {
+        threeWindowImage[12] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/14.png", function (loadedImage) {
+        threeWindowImage[13] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/15.png", function (loadedImage) {
+        threeWindowImage[14] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/16.png", function (loadedImage) {
+        threeWindowImage[15] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/17.png", function (loadedImage) {
+        threeWindowImage[16] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/18.png", function (loadedImage) {
+        threeWindowImage[17] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/19.png", function (loadedImage) {
+        threeWindowImage[18] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/20.png", function (loadedImage) {
+        threeWindowImage[19] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/21.png", function (loadedImage) {
+        threeWindowImage[20] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/22.png", function (loadedImage) {
+        threeWindowImage[21] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/23.png", function (loadedImage) {
+        threeWindowImage[22] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/24.png", function (loadedImage) {
+        threeWindowImage[23] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/25.png", function (loadedImage) {
+        threeWindowImage[24] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/26.png", function (loadedImage) {
+        threeWindowImage[25] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/27.png", function (loadedImage) {
+        threeWindowImage[26] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/28.png", function (loadedImage) {
+        threeWindowImage[27] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/29.png", function (loadedImage) {
+        threeWindowImage[28] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/30.png", function (loadedImage) {
+        threeWindowImage[29] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/31.png", function (loadedImage) {
+        threeWindowImage[30] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/32.png", function (loadedImage) {
+        threeWindowImage[31] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/33.png", function (loadedImage) {
+        threeWindowImage[32] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/34.png", function (loadedImage) {
+        threeWindowImage[33] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/35.png", function (loadedImage) {
+        threeWindowImage[34] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/36.png", function (loadedImage) {
+        threeWindowImage[35] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/37.png", function (loadedImage) {
+        threeWindowImage[36] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/38.png", function (loadedImage) {
+        threeWindowImage[37] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/39.png", function (loadedImage) {
+        threeWindowImage[38] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/40.png", function (loadedImage) {
+        threeWindowImage[39] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/41.png", function (loadedImage) {
+        threeWindowImage[40] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/42.png", function (loadedImage) {
+        threeWindowImage[41] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/43.png", function (loadedImage) {
+        threeWindowImage[42] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/44.png", function (loadedImage) {
+        threeWindowImage[43] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/45.png", function (loadedImage) {
+        threeWindowImage[44] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/46.png", function (loadedImage) {
+        threeWindowImage[45] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/47.png", function (loadedImage) {
+        threeWindowImage[46] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/48.png", function (loadedImage) {
+        threeWindowImage[47] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/49.png", function (loadedImage) {
+        threeWindowImage[48] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/50.png", function (loadedImage) {
+        threeWindowImage[49] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/51.png", function (loadedImage) {
+        threeWindowImage[50] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/52.png", function (loadedImage) {
+        threeWindowImage[51] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/53.png", function (loadedImage) {
+        threeWindowImage[52] = loadedImage;
+      });
+    }
+
+    // scene 6
+    {
+      p.loadImage("videos/cropped/three-windows/54.png", function (loadedImage) {
+        threeWindowFlipImage[0] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/55.png", function (loadedImage) {
+        threeWindowFlipImage[1] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/56.png", function (loadedImage) {
+        threeWindowFlipImage[2] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/57.png", function (loadedImage) {
+        threeWindowFlipImage[3] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/58.png", function (loadedImage) {
+        threeWindowFlipImage[4] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/59.png", function (loadedImage) {
+        threeWindowFlipImage[5] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/60.png", function (loadedImage) {
+        threeWindowFlipImage[6] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/61.png", function (loadedImage) {
+        threeWindowFlipImage[7] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/62.png", function (loadedImage) {
+        threeWindowFlipImage[8] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/63.png", function (loadedImage) {
+        threeWindowFlipImage[9] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/64.png", function (loadedImage) {
+        threeWindowFlipImage[10] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/65.png", function (loadedImage) {
+        threeWindowFlipImage[11] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/66.png", function (loadedImage) {
+        threeWindowFlipImage[12] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/67.png", function (loadedImage) {
+        threeWindowFlipImage[13] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/68.png", function (loadedImage) {
+        threeWindowFlipImage[14] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/69.png", function (loadedImage) {
+        threeWindowFlipImage[15] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/70.png", function (loadedImage) {
+        threeWindowFlipImage[16] = loadedImage;
+      });
+    }
+
+    // scene 7
+    {
+      p.loadImage("videos/cropped/three-windows/71.png", function (loadedImage) {
+        holdThreeWindowImage[0] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/72.png", function (loadedImage) {
+        holdThreeWindowImage[1] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/73.png", function (loadedImage) {
+        holdThreeWindowImage[2] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/74.png", function (loadedImage) {
+        holdThreeWindowImage[3] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/75.png", function (loadedImage) {
+        holdThreeWindowImage[4] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/76.png", function (loadedImage) {
+        holdThreeWindowImage[5] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/77.png", function (loadedImage) {
+        holdThreeWindowImage[6] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/78.png", function (loadedImage) {
+        holdThreeWindowImage[7] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/79.png", function (loadedImage) {
+        holdThreeWindowImage[8] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/80.png", function (loadedImage) {
+        holdThreeWindowImage[9] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/81.png", function (loadedImage) {
+        holdThreeWindowImage[10] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/82.png", function (loadedImage) {
+        holdThreeWindowImage[11] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/83.png", function (loadedImage) {
+        holdThreeWindowImage[12] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/84.png", function (loadedImage) {
+        holdThreeWindowImage[13] = loadedImage;
+      });
+      p.loadImage("videos/cropped/three-windows/85.png", function (loadedImage) {
+        holdThreeWindowImage[14] = loadedImage;
+      });
+    }
+
     canvas = p.createCanvas(p.windowWidth, p.windowHeight);
     console.log(p.windowWidth, p.windowHeight);
     canvas.id("canvas");
@@ -351,7 +645,7 @@ let sketch = function (p) {
         // p.calcFingerPos();
         handInfo = p.calcFingerPos();
         p.trackHandTrajectory(); // 手の軌道追跡を呼び出す
-        // p.trackWristRotation(); // 手首の回転追跡を呼び出す
+        p.trackWristRotation(); // 手首の回転追跡を呼び出す
         p.interaction();
 
         // デバッグ情報を表示
@@ -412,6 +706,9 @@ let sketch = function (p) {
   };
 
   p.calcFingerPos = function () {
+    if (!detections || !detections.multiHandLandmarks || detections.multiHandLandmarks.length === 0) {
+      return;
+    }
     for (let i = 0; i < detections.multiHandLandmarks.length; i++) {
       finPosX[i] = [];
       finPosY[i] = [];
@@ -539,6 +836,9 @@ let sketch = function (p) {
 
   // 手首の回転追跡関数
   p.trackWristRotation = function () {
+    if (!detections || !detections.multiHandLandmarks || detections.multiHandLandmarks.length === 0) {
+      return;
+    }
     if (finPosX[0] && finPosX[0][1] !== undefined) {
       // 手首の位置を取得（MediaPipeの手首ランドマーク）
       let wristX = p.width - detections.multiHandLandmarks[0][0].x * p.width;
@@ -757,7 +1057,7 @@ let sketch = function (p) {
     };
 
     p.checkKeepingClosed = function () {
-      if (closeLevel >= 19) {
+      if (closeLevel >= 18) {
         if (timeoutId === null) {
           timeoutId = setTimeout(() => {
             scene = 3;
@@ -826,7 +1126,7 @@ let sketch = function (p) {
       if (drawSimpleState.imageIndex >= drawSimpleImage.length) {
         if (timeoutId === null) {
           timeoutId = setTimeout(() => {
-            scene = 1;
+            scene = 5;
             drawSimpleState.imageIndex = 0;
             timeoutId = null; // reset timer
           }, waitMilSec);
@@ -936,6 +1236,269 @@ let sketch = function (p) {
   }
 
 
+  // scene 5
+  {
+    /**
+     * scene5のメインロジック。
+     * 親指、人差し指、中指が近づいている状態で手を下に動かすとコマが進む。
+     */
+    p.threeWindows = function () {
+      if (!detections.multiHandLandmarks || detections.multiHandLandmarks.length === 0) {
+        if (threeWindowImage[threeWindowState.imageIndex]) {
+          p.image(threeWindowImage[threeWindowState.imageIndex], p.width / 2, p.height / 2, p.width, p.height);
+        }
+        return;
+      }
+
+      // 指の座標を取得 (0:親指, 1:人差し指, 2:中指)
+      const thumbX = finPosX[0][0];
+      const thumbY = finPosY[0][0];
+      const indexX = finPosX[0][1];
+      const indexY = finPosY[0][1];
+      const middleX = finPosX[0][2];
+      const middleY = finPosY[0][2];
+
+      // 3本の指の座標がすべて取得できているか確認
+      if (thumbX === undefined || indexX === undefined || middleX === undefined) {
+        if (threeWindowImage[threeWindowState.imageIndex]) {
+          p.image(threeWindowImage[threeWindowState.imageIndex], p.width / 2, p.height / 2, p.width, p.height);
+        }
+        return;
+      }
+
+      // 指間の距離を計算
+      const distThumbIndex = p.dist(thumbX, thumbY, indexX, indexY);
+      const distIndexMiddle = p.dist(indexX, indexY, middleX, middleY);
+      const closeThreshold = 70; // 指が近いと判定する閾値 (環境に合わせて調整してください)
+
+      // 3本の指が十分に近づいているか判定
+      if (distThumbIndex < closeThreshold && distIndexMiddle < closeThreshold) {
+        threeWindowState.isFingersClose = true;
+
+        // 手の中心のY座標を計算
+        const handCenterY = (thumbY + indexY + middleY) / 3;
+
+        // Y座標の初期化
+        if (threeWindowState.lastY === 0) {
+          threeWindowState.lastY = handCenterY;
+        }
+
+        const moveThreshold = 5; // 下への移動を検出する閾値 (感度調整)
+        const currentTime = p.millis();
+
+        // 手が下に移動し、かつクールダウン時間が経過しているかチェック
+        if (handCenterY > threeWindowState.lastY + moveThreshold && currentTime > threeWindowState.lastActionTime + threeWindowState.cooldown) {
+
+          // コマを進める
+          if (threeWindowState.imageIndex < threeWindowImage.length - 1) {
+            threeWindowState.imageIndex++;
+            console.log("Scene5: コマを進めました。Index:", threeWindowState.imageIndex);
+          }
+
+          // タイムスタンプとY座標を更新
+          threeWindowState.lastActionTime = currentTime;
+          threeWindowState.lastY = handCenterY;
+        } else if (handCenterY < threeWindowState.lastY) {
+          // 手が上に移動したらY座標を更新し、再度下への移動を検出しやすくする
+          threeWindowState.lastY = handCenterY;
+        }
+
+      } else {
+        // 指が離れたら状態をリセット
+        threeWindowState.isFingersClose = false;
+        threeWindowState.lastY = 0;
+      }
+
+      // 現在のコマの画像を表示
+      let currentIndex = threeWindowState.imageIndex;
+      if (threeWindowImage[currentIndex]) {
+        p.image(threeWindowImage[currentIndex], p.width / 2, p.height / 2, p.width, p.height);
+      } else if (threeWindowImage.length > 0) {
+        p.image(threeWindowImage[0], p.width / 2, p.height / 2, p.width, p.height);
+      }
+    };
+
+    /**
+     * scene5の終了条件をチェックする関数。
+     * アニメーションが最後まで再生されたら一定時間後にシーンを切り替える。
+     */
+    p.checkKeepingThreeWindows = function () {
+      if (threeWindowState.imageIndex >= threeWindowImage.length - 1) {
+        if (timeoutId === null) {
+          timeoutId = setTimeout(() => {
+            scene = 6; // 次のシーンへ（例として1）
+            threeWindowState.imageIndex = 0; // インデックスをリセット
+            timeoutId = null;
+          }, waitMilSec);
+        }
+      } else {
+        // 条件を満たしていない場合はタイマーをクリア
+        if (timeoutId !== null) {
+          clearTimeout(timeoutId);
+          timeoutId = null;
+        }
+      }
+    };
+  }
+
+  // scene 6
+  {
+    /**
+     * scene6のメインロジック。
+     * 人差し指が親指に近づく動きを検出してコマを進める。
+     */
+    p.pinchAdvance = function () {
+      // 手が検出されていない場合は現在の画像を表示して終了
+      if (!detections.multiHandLandmarks || detections.multiHandLandmarks.length === 0) {
+        if (threeWindowFlipImage[threeWindowFlipState.imageIndex]) {
+          p.image(threeWindowFlipImage[threeWindowFlipState.imageIndex], p.width / 2, p.height / 2, p.width, p.height);
+        }
+        return;
+      }
+
+      // 親指(0)と人差し指(1)の座標を取得
+      const thumbX = finPosX[0][0];
+      const thumbY = finPosY[0][0];
+      const indexX = finPosX[0][1];
+      const indexY = finPosY[0][1];
+
+      // 座標が有効かチェック
+      if (thumbX === undefined || indexX === undefined) {
+        if (threeWindowFlipImage[threeWindowFlipState.imageIndex]) {
+          p.image(threeWindowFlipImage[threeWindowFlipState.imageIndex], p.width / 2, p.height / 2, p.width, p.height);
+        }
+        return;
+      }
+
+      // 現在の指の距離を計算
+      const currentDist = p.dist(thumbX, thumbY, indexX, indexY);
+
+      // prevDistが未設定（-1）の場合、現在の距離で初期化
+      if (threeWindowFlipState.prevDist === -1) {
+        threeWindowFlipState.prevDist = currentDist;
+      }
+
+      const distChangeThreshold = 5; // 反応する距離の変化量の閾値
+      const currentTime = p.millis();
+
+      // 条件：(1)指が近づいており (2)その変化が閾値より大きく (3)クールダウンが終了している
+      if (currentDist < threeWindowFlipState.prevDist - distChangeThreshold &&
+        currentTime > threeWindowFlipState.lastActionTime + threeWindowFlipState.cooldown) {
+
+        // コマを進める
+        if (threeWindowFlipState.imageIndex < threeWindowFlipImage.length - 1) {
+          threeWindowFlipState.imageIndex++;
+          console.log("Scene6: コマを進めました。Index:", threeWindowFlipState.imageIndex);
+        }
+
+        // アクション実行時間を更新
+        threeWindowFlipState.lastActionTime = currentTime;
+      }
+
+      // 次のフレームのために現在の距離を保存
+      threeWindowFlipState.prevDist = currentDist;
+
+      // 画像を表示
+      let currentIndex = threeWindowFlipState.imageIndex;
+      if (threeWindowFlipImage[currentIndex]) {
+        p.image(threeWindowFlipImage[currentIndex], p.width / 2, p.height / 2, p.width, p.height);
+      } else if (threeWindowFlipImage.length > 0) {
+        p.image(threeWindowFlipImage[0], p.width / 2, p.height / 2, p.width, p.height);
+      }
+    };
+
+    /**
+     * scene6の終了条件をチェックする関数
+     */
+    p.checkKeepingThreeWindowsFlip = function () {
+      if (threeWindowFlipState.imageIndex >= threeWindowFlipImage.length - 1) {
+        if (timeoutId === null) {
+          timeoutId = setTimeout(() => {
+            scene = 7; // 最初のシーンに戻る
+            threeWindowFlipState.imageIndex = 0; // 状態をリセット
+            threeWindowFlipState.prevDist = -1;
+            timeoutId = null;
+          }, waitMilSec);
+        }
+      } else {
+        if (timeoutId !== null) {
+          clearTimeout(timeoutId);
+          timeoutId = null;
+        }
+      }
+    };
+  }
+
+  // scene 7
+  {
+    /**
+  * 親指と中指が近づいているかを判定する
+  */
+    p.detectMiddleFingerPinch = function () {
+      if (finPosX[0] && finPosX[0][2] !== undefined) {
+        // 親指(0)と中指(2)の距離を計算
+        const distance = p.dist(finPosX[0][0], finPosY[0][0], finPosX[0][2], finPosY[0][2]);
+        const pinchThreshold = 60; // 近いと判定する閾値
+        holdThreeWindowState.isFingersClose = (distance < pinchThreshold);
+        return holdThreeWindowState.isFingersClose;
+      }
+      holdThreeWindowState.isFingersClose = false;
+      return false;
+    };
+    p.middleFingerTwist = function () {
+      // まず、指が近づいているか状態を更新
+      p.detectMiddleFingerPinch();
+
+      // 指が近づいている場合のみ、手首の回転を処理
+      if (holdThreeWindowState.isFingersClose) {
+        // このロジックはscene9(wristTwist)とほぼ同じ
+        if (wristRotation.wristDirection !== 'none' &&
+          wristRotation.totalWristMovement > wristRotation.wristRotationThreshold) {
+
+          holdThreeWindowState.imageIndex++;
+          console.log('Scene7: コマを進めました。Index:', holdThreeWindowState.imageIndex);
+          // 累積した移動量をリセット
+          wristRotation.totalWristMovement = 0;
+        }
+      }
+
+      // 画像インデックスが配列の範囲内に収まるように調整
+      if (holdThreeWindowState.imageIndex >= holdThreeWindowImage.length) {
+        holdThreeWindowState.imageIndex = holdThreeWindowImage.length - 1;
+      } else if (holdThreeWindowState.imageIndex < 0) {
+        holdThreeWindowState.imageIndex = 0;
+      }
+
+      // 画像の表示
+      let currentIndex = holdThreeWindowState.imageIndex;
+      if (holdThreeWindowImage[currentIndex]) {
+        p.image(holdThreeWindowImage[currentIndex], p.width / 2, p.height / 2, p.width, p.height);
+      } else if (holdThreeWindowImage.length > 0) {
+        p.image(holdThreeWindowImage[0], p.width / 2, p.height / 2, p.width, p.height);
+      }
+    };
+    /**
+     * scene7の終了条件をチェックする関数
+     */
+    p.checkKeepingHoldThreeWindow = function () {
+      if (holdThreeWindowState.imageIndex >= holdThreeWindowImage.length - 1) {
+        if (timeoutId === null) {
+          timeoutId = setTimeout(() => {
+            scene = 1; // 最初のシーンに戻る
+            holdThreeWindowState.imageIndex = 0; // 状態をリセット
+            holdThreeWindowState.prevDist = -1;
+            timeoutId = null;
+          }, waitMilSec);
+        }
+      } else {
+        if (timeoutId !== null) {
+          clearTimeout(timeoutId);
+          timeoutId = null;
+        }
+      }
+    };
+  }
+
   // scene 9
   {
     p.wristTwist = function () {
@@ -1020,6 +1583,15 @@ let sketch = function (p) {
     } else if (scene == 4) {
       p.Box();
       p.checkKeepingBox();
+    } else if (scene == 5) {
+      p.threeWindows();
+      p.checkKeepingThreeWindows();
+    } else if (scene == 6) {
+      p.pinchAdvance();
+      p.checkKeepingThreeWindowsFlip();
+    } else if (scene == 7) {
+      p.middleFingerTwist();
+      p.checkKeepingHoldThreeWindow();
     } else if (scene == 9) {
       p.wristTwist();
       p.checkKeepingWristTwist();
